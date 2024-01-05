@@ -58,7 +58,7 @@ def test_eq(api):
 ])
 def test_page_types(api, t):
     type_name = t.__name__
-    name = '{}:{}'.format(type_name, TEST_PAGE)
+    name = f'{type_name}:{TEST_PAGE}'
     api_func = getattr(api, type_name.lower())
 
     obj = api_func(name)

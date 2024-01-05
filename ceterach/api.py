@@ -208,19 +208,14 @@ class MediaWiki:
             else:
                 raiseme = exc.CeterachError(ret['error']['info'])
         if raiseme:
-            if 'error' not in ret:
-                code = 'py'
-            else:
-                code = ret["error"].get("code", "py")
+            code = 'py' if 'error' not in ret else ret["error"].get("code", "py")
             raiseme.response = ret['error'].get(code)
             raiseme.code = code
             raise raiseme
         return ret
 
     def _build_call_params(self, params, more_params, use_defaults):
-        final_dict = {}
-        for (k, v) in params.items():
-            final_dict[k] = v
+        final_dict = dict(params.items())
         if use_defaults:
             for (k, v) in self.config['defaults'].items():
                 final_dict.setdefault(k, v)
@@ -390,14 +385,13 @@ class MediaWiki:
                 l += 1
                 if l >= limit:
                     return
-            if 'query-continue' in res:
-                c, p = {}, {}
-                for p_, n in res['query-continue'].items():
-                    for k, v in n.items():
-                        c[k] = v
-                        p[p_] = 1  # what is this even doing here
-            else:
+            if 'query-continue' not in res:
                 return
+            c, p = {}, {}
+            for p_, n in res['query-continue'].items():
+                for k, v in n.items():
+                    c[k] = v
+                    p[p_] = 1  # what is this even doing here
             params.update(c)
 
     def newiterator(self, params=None, limit=float("inf"), **more_params):

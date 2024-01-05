@@ -97,10 +97,9 @@ v6 = re.compile(r"^\s*((([0-9A-Fa-f]{1,4}:){7}"
 
 
 def ip_address(address: str):
-    err = "{0!r} does not appear to be an IPv4 or IPv6 address"
     if v4.match(address) or v6.match(address):
         return True
-    else:
-        raise ValueError(err.format(address))
+    err = "{0!r} does not appear to be an IPv4 or IPv6 address"
+    raise ValueError(err.format(address))
 
 __all__ = [v.__name__ for v in vars().values() if hasattr(v, "__call__")]
