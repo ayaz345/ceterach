@@ -94,7 +94,7 @@ class User:
                                     usprop=props)['query']['users'][0]
         # normalize our username in case it was entered oddly
         self._name = res['name']
-        self._userpage = self._api.page("User:" + self.name)
+        self._userpage = self._api.page(f"User:{self.name}")
         if 'missing' in res:
             self._exists = False
             return
@@ -199,9 +199,7 @@ class User:
     @decorate
     def userpage(self):
         """A Page object that represents this user's userpage."""
-        #: :type: ceterach.page.Page
-        attr = "_userpage"
-        return attr
+        return "_userpage"
 
     @property
     @decorate

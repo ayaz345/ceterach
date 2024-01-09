@@ -157,9 +157,7 @@ class Revision:
     @decorate
     def page(self):
         """The page to which this revision was made."""
-        #: :type: ceterach.page.Page
-        attr = "_page"
-        return attr
+        return "_page"
 
     @property
     @decorate
@@ -177,9 +175,7 @@ class Revision:
     @decorate
     def user(self):
         """The user who made this revision."""
-        #: :type: ceterach.user.User
-        attr = "_user"
-        return attr
+        return "_user"
 
     @property
     @decorate
@@ -193,9 +189,7 @@ class Revision:
         """The revision made before this one, which was made to the same
         page.
         """
-        #: :type: ceterach.revision.Revision
-        attr = "_prev_revision"
-        return attr
+        return "_prev_revision"
 
     @property
     @decorate

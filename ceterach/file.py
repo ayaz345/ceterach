@@ -106,17 +106,20 @@ class File(Page):
             raise TypeError("Cannot specify both width and height")
         t = quote(self.title.replace(" ", "_"), safe=":/")[5:]
         url = self._url
-        url = re.sub(r"(/[a-z0-9]/[a-z0-9]{2}/)",
-                     r"/thumb\1", url[::-1].replace('/' + t[::-1], '')[::-1])
+        url = re.sub(
+            r"(/[a-z0-9]/[a-z0-9]{2}/)",
+            r"/thumb\1",
+            url[::-1].replace(f'/{t[::-1]}', '')[::-1],
+        )
         if width:
-            url += "/" + str(width) + "px-" + t
+            url += f"/{str(width)}px-{t}"
         elif height:
             #  width                 X
             # -------    =     -------------
             # height           param(height)
             d = self.dimensions
             width = int(d[0] * height / d[1] + 0.5)
-            url += "/" + str(width) + "px-" + t
+            url += f"/{width}px-{t}"
         return url
 
     @property

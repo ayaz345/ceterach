@@ -131,15 +131,12 @@ class Page:
         self._is_redirect = 'redirect' in res
         self._pageid = res.get("pageid", -1)
         if self._pageid < 0:
-            if "missing" in res:
-                # If it has a negative ID and it's missing, we can still get
-                # the namespace...
-                self._exists = False
-            else:
-                # ... but not if it's also invalid
-                self._exists = False
+            if "missing" not in res:
                 err = "Page {0!r} is invalid"
                 raise exc.InvalidPageError(err.format(self.title))
+            # If it has a negative ID and it's missing, we can still get
+            # the namespace...
+            self._exists = False
         else:
             self._exists = True
             if "*" in res.get('revisions', {0: ()})[0]:
@@ -482,9 +479,9 @@ class Page:
                   current page.
         :raises: exc.InvalidPageError
         """
-        ns = self._api.namespaces[self.namespace]
         if self.namespace < 0:
             err = "Pages in the {0!r} namespace do not have talk pages"
+            ns = self._api.namespaces[self.namespace]
             raise exc.InvalidPageError(err.format(ns))
         if self.is_talkpage:
             # Talk -> Content
@@ -494,7 +491,7 @@ class Page:
             # Content -> Talk
             new_ns = self.namespace + 1
             if not self.namespace:
-                new_title = ":" + self.title
+                new_title = f":{self.title}"
             else:
                 new_title = ":" + self.title.partition(":")[-1]
         new_ns_prefix = self._api.namespaces[new_ns]
@@ -561,9 +558,7 @@ class Page:
         :returns: A User object
         :raises: NonexistentPageError, if the page doesn't exist or is invalid.
         """
-        #: :type: ceterach.user.User
-        attr = "_revision_user"
-        return attr
+        return "_revision_user"
 
     def get_redirect_target(self):
         """Gets the Page object for the target this Page redirects to.
@@ -582,8 +577,7 @@ class Page:
         if hasattr(self, "_redirect_target"):
             return self._redirect_target
         redirect_regex = re.compile(r"#redirect\s*?\[\[(.+?)\]\]", re.I)
-        haspage = redirect_regex.match(self.content)
-        if haspage:
+        if haspage := redirect_regex.match(self.content):
             target = haspage.group(1)
             self._redirect_target = self._api.page(target)
             return self._redirect_target
